@@ -64,8 +64,8 @@ for k in range(0, MAX_LOOP):
     print("white")
     for j in range(MIN_RANGE, MAX_RANGE):
         for i in range(NUM_LEDS):
-            r = j<<16
-            g = j<<8
+            g = j<<16
+            r = j<<8
             b = j
             ar[i] = r + g + b
         sm.put(ar,8)
