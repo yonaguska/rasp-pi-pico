@@ -1,3 +1,9 @@
+"""
+    This is code derived from code in Raspberry Pi Org's book on the new Pico.
+    I had to modify the driving of 'white' colors; the book's code didn't work
+    correctly on my string, 'white' just turned the LEDs off.   
+"""
+
 import array, time
 from machine import Pin
 import rp2
@@ -7,8 +13,10 @@ from rp2 import PIO, StateMachine, asm_pio
 NUM_LEDS = 8
 MAX_LOOP   = 10
 SLEEP_TIME = 10
-MAX_RANGE  = 63
+MIN_RANGE  = 15
+MAX_RANGE  = 31
 
+# Here be dragons, I'll have to study up on use of PIO state machine use
 @asm_pio(sideset_init=PIO.OUT_LOW, out_shiftdir=PIO.SHIFT_LEFT, autopull=True, pull_thresh=24)
 
 def ws2812():
@@ -33,28 +41,28 @@ ar = array.array("I", [0 for _ in range(NUM_LEDS)])
 
 for k in range(0, MAX_LOOP):
     print("blue")
-    for j in range(0, MAX_RANGE):
+    for j in range(MIN_RANGE, MAX_RANGE):
         for i in range(NUM_LEDS):
             ar[i] = j
         sm.put(ar,8)
         time.sleep_ms(SLEEP_TIME)
     
     print("red")
-    for j in range(0, MAX_RANGE):
+    for j in range(MIN_RANGE, MAX_RANGE):
         for i in range(NUM_LEDS):
             ar[i] = j<<8
         sm.put(ar,8)
         time.sleep_ms(SLEEP_TIME)
     
     print("green")
-    for j in range(0, MAX_RANGE):
+    for j in range(MIN_RANGE, MAX_RANGE):
         for i in range(NUM_LEDS):
             ar[i] = j<<16
         sm.put(ar,8)
         time.sleep_ms(SLEEP_TIME)
     
     print("white")
-    for j in range(0, MAX_RANGE):
+    for j in range(MIN_RANGE, MAX_RANGE):
         for i in range(NUM_LEDS):
             r = j<<16
             g = j<<8
@@ -63,7 +71,8 @@ for k in range(0, MAX_LOOP):
         sm.put(ar,8)
         time.sleep_ms(SLEEP_TIME)
     SLEEP_TIME -= 1
-    
+
+# clear the LEDs
 for i in range(NUM_LEDS):
     this = 0
     ar[i] = this
