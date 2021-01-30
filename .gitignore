@@ -131,3 +131,4 @@ dmypy.json
 ## my stuff
 CircuitPython/adafruit-circuitpython*
 *.DS_Store
+MicroPython/pico-micropython-examples*
