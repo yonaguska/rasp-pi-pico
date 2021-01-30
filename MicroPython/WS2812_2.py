@@ -12,7 +12,7 @@ from rp2 import PIO, StateMachine, asm_pio
 # Configure the number of WS2812 LEDs.
 NUM_LEDS   = 24 #8
 MAX_LOOP   = 10
-SLEEP_TIME = 10
+SLEEP_TIME = 50
 MIN_RANGE  = 15
 MAX_RANGE  = 31
 
@@ -39,40 +39,38 @@ sm.active(1)
 # Display a pattern on the LEDs via an array of LED RGB values.
 ar = array.array("I", [0 for _ in range(NUM_LEDS)])
 
-for k in range(0, MAX_LOOP):
-    print("blue")
-    for j in range(MIN_RANGE, MAX_RANGE):
-        for i in range(NUM_LEDS):
-            ar[i] = j
+DIM_BLUE = 15
+print("blue")
+this_sleep = SLEEP_TIME
+for j in range(0, MAX_LOOP):
+    print("this_sleep {:>3}".format(this_sleep))
+    # set the LEDs
+    for i in range(0, NUM_LEDS):
+        # we have a ring, turn on near and far LEDs
+        near = i
+        far  = NUM_LEDS - (i + 1)
+        #print("near {:>2}  far {:>}".format(near, far))
+        ar[near] = DIM_BLUE
+        ar[far]  = DIM_BLUE
+            
         sm.put(ar,8)
-        time.sleep_ms(SLEEP_TIME)
-    
-    print("red")
-    for j in range(MIN_RANGE, MAX_RANGE):
-        for i in range(NUM_LEDS):
-            ar[i] = j<<8
-        sm.put(ar,8)
-        time.sleep_ms(SLEEP_TIME)
-    
-    print("green")
-    for j in range(MIN_RANGE, MAX_RANGE):
-        for i in range(NUM_LEDS):
-            ar[i] = j<<16
-        sm.put(ar,8)
-        time.sleep_ms(SLEEP_TIME)
-    
-    print("white")
-    for j in range(MIN_RANGE, MAX_RANGE):
-        for i in range(NUM_LEDS):
-            g = j<<16
-            r = j<<8
-            b = j
-            ar[i] = r + g + b
-        sm.put(ar,8)
-        time.sleep_ms(SLEEP_TIME)
-    SLEEP_TIME -= 1
+        time.sleep_ms(this_sleep)
 
-# clear the LEDs
+    # clear the LEDs, in reverse order
+    for i in range(0, NUM_LEDS/2):
+        # we have a ring, turn off near and far LEDs
+        near = (int(NUM_LEDS/2)) - (i + 1)
+        far  = (int(NUM_LEDS/2)) + i
+        #print("near {:>2}  far {:>}".format(near, far))
+        ar[near] = 0
+        ar[far]  = 0
+            
+        sm.put(ar,8)
+        time.sleep_ms(this_sleep)
+    
+    this_sleep -= 5
+
+# clear the LEDs, just to be sure
 for i in range(NUM_LEDS):
     this = 0
     ar[i] = this
