@@ -39,19 +39,43 @@ sm.active(1)
 # Display a pattern on the LEDs via an array of LED RGB values.
 ar = array.array("I", [0 for _ in range(NUM_LEDS)])
 
-DIM_BLUE = 15
+DIM = 15
 print("blue")
 this_sleep = SLEEP_TIME
 for j in range(0, MAX_LOOP):
     print("this_sleep {:>3}".format(this_sleep))
-    # set the LEDs
+    # set the LEDs blue
     for i in range(0, NUM_LEDS):
         # we have a ring, turn on near and far LEDs
         near = i
         far  = NUM_LEDS - (i + 1)
         #print("near {:>2}  far {:>}".format(near, far))
-        ar[near] = DIM_BLUE
-        ar[far]  = DIM_BLUE
+        ar[near] = DIM
+        ar[far]  = DIM
+            
+        sm.put(ar,8)
+        time.sleep_ms(this_sleep)
+
+    # set the LEDs red, reverse order
+    for i in range(0, NUM_LEDS/2):
+        # we have a ring, turn off near and far LEDs
+        near = (int(NUM_LEDS/2)) - (i + 1)
+        far  = (int(NUM_LEDS/2)) + i
+        #print("near {:>2}  far {:>}".format(near, far))
+        ar[near] = DIM<<8
+        ar[far]  = DIM<<8
+            
+        sm.put(ar,8)
+        time.sleep_ms(this_sleep)
+
+    # set the LEDs green
+    for i in range(0, NUM_LEDS):
+        # we have a ring, turn on near and far LEDs
+        near = i
+        far  = NUM_LEDS - (i + 1)
+        #print("near {:>2}  far {:>}".format(near, far))
+        ar[near] = DIM<<16
+        ar[far]  = DIM<<16
             
         sm.put(ar,8)
         time.sleep_ms(this_sleep)
