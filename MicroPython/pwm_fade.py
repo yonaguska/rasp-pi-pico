@@ -4,8 +4,9 @@ import time
 from machine import Pin, PWM
 
 
-# Construct PWM object, with LED on Pin(25).
+# Construct PWM object, with onboard LED on Pin(25).
 pwm = PWM(Pin(25))
+# Construct PWM object, with offboard LED on Pin(1).
 pwm2 = PWM(Pin(1))
 
 # Set the PWM frequency.
