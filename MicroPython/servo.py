@@ -11,11 +11,15 @@ servo.freq(50)
 
 # play with the servo
 start = 2500
-end   = 1700 * 5
+end   = 8500 #1700 * 5
 step  = 1
 duty  = start
 sleeptime = 1
 print('duty {:6d}  start {}  end {}  step {}'.format(duty, start, end, step))
+midpoint = int((end - start)/2 + start)
+print('midpoint {}'.format(midpoint))
+servo.duty_u16(midpoint)
+time.sleep(20)
 while True:
     #print('duty {:6d}  step {}'.format(duty, step))
     servo.duty_u16(duty)
